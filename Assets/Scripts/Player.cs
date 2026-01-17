@@ -4,40 +4,71 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    //[SerializeField] float speedOfPlayer;
     float timePressKey;
-    float inputMoveX;
+    float inputMove;
+    [SerializeField] Ground ground;
+
+    private void Start()
+    {
+        timePressKey = 0f;
+        inputMove = 0f;
+    }
 
     private void Update()
     {
         MovePlayer();
     }
 
-    private void Start()
-    {
-        timePressKey = 0f;
-        inputMoveX = 0f;
-    }
-
     void MovePlayer()
     {
         Vector2 deltaPos = new Vector2();
+        Vector2 posOfBoundMaxGround = PosOfTopOfColliderGround(ground);
+
+        // Left/right move
         if (Keyboard.current.leftArrowKey.isPressed)
         {
-            inputMoveX = 0.1f;
-            inputMoveX += timePressKey * inputMoveX;
-            deltaPos.x -= inputMoveX;
+            inputMove = 0.1f;
+            inputMove += timePressKey * inputMove;
+            deltaPos.x -= inputMove;
         }
         if (Keyboard.current.rightArrowKey.isPressed)
         {
-            inputMoveX = 0.1f;
-            inputMoveX += timePressKey * inputMoveX;
-            deltaPos.x += inputMoveX;
+            inputMove = 0.1f;
+            inputMove += timePressKey * inputMove;
+            deltaPos.x += inputMove;
+        }
+
+        // Up/down move
+        if (Keyboard.current.upArrowKey.isPressed)
+        {
+            inputMove = 0.1f;
+            inputMove += timePressKey * inputMove;
+            deltaPos.y += inputMove;
+        }
+
+        if (Keyboard.current.downArrowKey.isPressed)
+        {
+            inputMove = 0.1f;
+            inputMove -= timePressKey * inputMove;
+            
+            if (this.transform.position.y > posOfBoundMaxGround.y + 0.5f)
+            {
+                Debug.Log("pos of player better pos of ground!");
+                deltaPos.y -= inputMove;
+            }
         }
         if (Keyboard.current.leftArrowKey.wasReleasedThisFrame || Keyboard.current.rightArrowKey.wasReleasedThisFrame)
         {
-            inputMoveX = 0f;
+            inputMove = 0f;
         }  
         transform.Translate(deltaPos);
+    }
+
+    // To take y of bound.max of ground
+    Vector2 PosOfTopOfColliderGround(Ground ground)
+    {
+        Collider2D col = ground.GetComponent<Collider2D>();
+        Bounds bound = col.bounds;
+        return bound.max;
     }
 }
