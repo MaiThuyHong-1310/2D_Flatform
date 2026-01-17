@@ -53,7 +53,6 @@ public class Player : MonoBehaviour
             
             if (this.transform.position.y > posOfBoundMaxGround.y + 0.5f)
             {
-                Debug.Log("pos of player better pos of ground!");
                 deltaPos.y -= inputMove;
             }
         }
