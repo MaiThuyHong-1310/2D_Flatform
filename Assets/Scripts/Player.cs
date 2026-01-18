@@ -7,6 +7,15 @@ public class Player : MonoBehaviour
     float timePressKey;
     float inputMove;
     [SerializeField] Ground ground;
+    [SerializeField] InputActionAsset inputMoveAction;
+    InputAction inputMoveActionReference;
+
+    private void OnEnable()
+    {
+        inputMoveActionReference = inputMoveAction.FindAction("Player/Move", true);
+        inputMoveActionReference.Enable();
+    }
+
 
     private void Start()
     {
@@ -21,17 +30,20 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
+
         Vector2 deltaPos = new Vector2();
         Vector2 posOfBoundMaxGround = PosOfTopOfColliderGround(ground);
 
+        Vector2 inputValue = inputMoveActionReference.ReadValue<Vector2>();
+
         // Left/right move
-        if (Keyboard.current.leftArrowKey.isPressed)
+        if (inputValue.x < 0)
         {
             inputMove = 0.1f;
             inputMove += timePressKey * inputMove;
             deltaPos.x -= inputMove;
         }
-        if (Keyboard.current.rightArrowKey.isPressed)
+        if (inputValue.x > 0)
         {
             inputMove = 0.1f;
             inputMove += timePressKey * inputMove;
@@ -39,14 +51,14 @@ public class Player : MonoBehaviour
         }
 
         // Up/down move
-        if (Keyboard.current.upArrowKey.isPressed)
+        if (inputValue.y > 0)
         {
             inputMove = 0.1f;
             inputMove += timePressKey * inputMove;
             deltaPos.y += inputMove;
         }
 
-        if (Keyboard.current.downArrowKey.isPressed)
+        if (inputValue.y < 0)
         {
             inputMove = 0.1f;
             inputMove -= timePressKey * inputMove;
@@ -56,7 +68,7 @@ public class Player : MonoBehaviour
                 deltaPos.y -= inputMove;
             }
         }
-        if (Keyboard.current.leftArrowKey.wasReleasedThisFrame || Keyboard.current.rightArrowKey.wasReleasedThisFrame)
+        if (inputValue.x == 0 && inputValue.y == 0)
         {
             inputMove = 0f;
         }  
@@ -69,5 +81,10 @@ public class Player : MonoBehaviour
         Collider2D col = ground.GetComponent<Collider2D>();
         Bounds bound = col.bounds;
         return bound.max;
+    }
+
+    private void OnDisable()
+    {
+        inputMoveActionReference.Disable();
     }
 }
