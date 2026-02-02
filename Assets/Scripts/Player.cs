@@ -79,6 +79,8 @@ public class Player : MonoBehaviour
             velocity.y = jumpHeight;
             rb.linearVelocity = velocity;
             isGround = false;
+            animator.SetBool("Jump", true);
+            //imator.SetBool("Jump", false);
         }
     }
 
@@ -87,6 +89,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.name == "Ground")
         {
             isGround = true;
+            animator.SetBool("Jump", false);
         }
     }
 
