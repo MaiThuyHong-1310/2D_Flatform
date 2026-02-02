@@ -24,7 +24,8 @@ public class Player : MonoBehaviour
     {
         movement = SimpleInput.GetAxis("Horizontal");
 
-        //animator.SetFloat("Run", Mathf.Abs(movement));
+        // set run value equal movement
+        animator.SetFloat("Run", Mathf.Abs(movement));
 
         if (movement < 0f && facingRight)
         {
@@ -36,6 +37,14 @@ public class Player : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
             facingRight = true;
+        }
+
+        if (animator.GetFloat("Run") > 0.1f)
+        {
+            animator.SetFloat("Run", 1f);
+        }else if (animator.GetFloat("Run") < 0.1f)
+        {
+            animator.SetFloat("Run", 0f);
         }
     }
 
