@@ -44,6 +44,24 @@ public class Player : MonoBehaviour
         transform.position += new Vector3(movement, 0f, 0f) * Time.fixedDeltaTime * speed;
     }
 
+    public void PlayerAttackAnimation()
+    {
+        float random = Random.Range(0, 3);
+
+        if (random == 0)
+        {
+            animator.SetTrigger("Attack1");
+        }
+        else if (random == 1)
+        {
+            animator.SetTrigger("Attack2");
+        }
+        else
+        {
+            animator.SetTrigger("Attack3");
+        }
+    }
+
     public void JumpButton()
     {
         if (isGround)
