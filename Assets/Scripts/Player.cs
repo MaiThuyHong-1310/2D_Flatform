@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
 
 
     public bool isGround = true;
+    public bool facingRight = true;
+
+    public Animator animator;
 
     private void Start()
     {
@@ -20,6 +23,20 @@ public class Player : MonoBehaviour
     private void Update()
     {
         movement = SimpleInput.GetAxis("Horizontal");
+
+        //animator.SetFloat("Run", Mathf.Abs(movement));
+
+        if (movement < 0f && facingRight)
+        {
+            transform.eulerAngles = new Vector3(0f, -180f, 0f);
+            facingRight = false;
+        }
+
+        if (movement > 0f && facingRight == false)
+        {
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            facingRight = true;
+        }
     }
 
     private void FixedUpdate()
